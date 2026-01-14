@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Terms of Service | SnapStudy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Microsoft JhengHei",sans-serif;background:#0b1220;color:rgba(255,255,255,.92)}
+    header{position:sticky;top:0;background:rgba(11,18,32,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.1)}
+    .nav{max-width:960px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between}
+    select{background:#111;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:6px}
+    main{max-width:960px;margin:auto;padding:32px 20px 60px}
+    h1{font-size:32px}
+    h2{margin-top:28px}
+    p,li{color:rgba(255,255,255,.75);line-height:1.7}
+    ul{padding-left:20px}
+    .lang{display:none}
+    .lang.active{display:block}
+    footer{text-align:center;padding:16px;color:rgba(255,255,255,.5);border-top:1px solid rgba(255,255,255,.1)}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <strong>SnapStudy</strong>
+    <select id="langSelect">
+      <option value="en">English</option>
+      <option value="zh-Hant">繁體中文</option>
+      <option value="zh-Hans">简体中文</option>
+    </select>
+  </div>
+</header>
+
+<main>
+
+<div class="lang" data-lang="en">
+  <h1>Terms of Service</h1>
+  <p>Last updated: 2026-01-09</p>
+  <p>By using SnapStudy, you agree to these terms.</p>
+  <h2>Use</h2>
+  <p>The app is for educational purposes only.</p>
+  <h2>Liability</h2>
+  <p>The app is provided “as is” without guarantees.</p>
+</div>
+
+<div class="lang" data-lang="zh-Hant">
+  <h1>服務條款</h1>
+  <p>最後更新日期：2026-01-09</p>
+  <p>使用 SnapStudy 即表示您同意本條款。</p>
+  <h2>使用規範</h2>
+  <p>本 App 僅供教育用途。</p>
+  <h2>責任限制</h2>
+  <p>本 App 以現狀提供，不保證結果。</p>
+</div>
+
+<div class="lang" data-lang="zh-Hans">
+  <h1>服务条款</h1>
+  <p>最后更新日期：2026-01-09</p>
+  <p>使用 SnapStudy 即表示您同意本条款。</p>
+  <h2>使用规范</h2>
+  <p>本 App 仅用于教育用途。</p>
+  <h2>责任限制</h2>
+  <p>本 App 按现状提供，不保证结果。</p>
+</div>
+
+</main>
+
+<footer>© 2026 SnapStudy</footer>
+
+<script>
+  const normalize=l=>l.startsWith("zh")?(l.includes("Hant")||l.includes("TW")?"zh-Hant":"zh-Hans"):"en";
+  const lang=localStorage.getItem("snapstudy_lang")||normalize(navigator.language);
+  const sel=document.getElementById("langSelect");
+  function apply(l){
+    document.querySelectorAll(".lang").forEach(d=>d.classList.toggle("active",d.dataset.lang===l));
+    sel.value=l;localStorage.setItem("snapstudy_lang",l);
+  }
+  sel.onchange=e=>apply(e.target.value);
+  apply(lang);
+</script>
+
+</body>
+</html>
