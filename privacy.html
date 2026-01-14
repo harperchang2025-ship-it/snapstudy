@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Privacy Policy | SnapStudy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Microsoft JhengHei",sans-serif;
+      background:#0b1220;
+      color:rgba(255,255,255,.92);
+    }
+    header{
+      position:sticky;top:0;z-index:10;
+      background:rgba(11,18,32,.75);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.1);
+    }
+    .nav{
+      max-width:960px;margin:auto;
+      padding:14px 20px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .brand{font-weight:700}
+    select{
+      background:#111;border:1px solid rgba(255,255,255,.2);
+      color:#fff;border-radius:10px;padding:6px 8px;
+    }
+    main{
+      max-width:960px;margin:auto;padding:32px 20px 60px;
+    }
+    h1{font-size:32px;margin-bottom:8px}
+    h2{margin-top:28px;font-size:20px}
+    p,li{color:rgba(255,255,255,.75);line-height:1.7}
+    ul{padding-left:20px}
+    footer{
+      border-top:1px solid rgba(255,255,255,.1);
+      padding:16px 20px;
+      text-align:center;
+      color:rgba(255,255,255,.5);
+      font-size:13px;
+    }
+    .lang{display:none}
+    .lang.active{display:block}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">SnapStudy</div>
+    <select id="langSelect">
+      <option value="en">English</option>
+      <option value="zh-Hant">繁體中文</option>
+      <option value="zh-Hans">简体中文</option>
+    </select>
+  </div>
+</header>
+
+<main>
+
+<!-- EN -->
+<div class="lang" data-lang="en">
+  <h1>Privacy Policy</h1>
+  <p>Last updated: 2026-01-09</p>
+
+  <p>This Privacy Policy explains how SnapStudy collects, uses, and protects your information.</p>
+
+  <h2>Information We Collect</h2>
+  <ul>
+    <li>Photos and images you submit</li>
+    <li>Audio recordings</li>
+    <li>Text and file titles you create</li>
+    <li>Basic technical and diagnostic data</li>
+  </ul>
+
+  <h2>How We Use Data</h2>
+  <p>Data is used solely to provide summaries, learning content, and practice exams.</p>
+
+  <h2>Third-Party AI Services</h2>
+  <p>Content may be temporarily processed by AI services to perform OCR, transcription, and summarization.</p>
+
+  <h2>Contact</h2>
+  <p>Email: support@snapstudy.app</p>
+</div>
+
+<!-- 繁體 -->
+<div class="lang" data-lang="zh-Hant">
+  <h1>隱私權政策</h1>
+  <p>最後更新日期：2026-01-09</p>
+
+  <p>本政策說明 SnapStudy 如何蒐集、使用及保護您的資訊。</p>
+
+  <h2>蒐集的資訊</h2>
+  <ul>
+    <li>您提交的照片與影像</li>
+    <li>錄音內容</li>
+    <li>文字輸入與檔案標題</li>
+    <li>基本技術與錯誤診斷資料</li>
+  </ul>
+
+  <h2>資料使用方式</h2>
+  <p>所有資料僅用於摘要、學習內容與練習考題生成。</p>
+
+  <h2>第三方 AI 服務</h2>
+  <p>為提供 OCR、語音轉文字與摘要功能，內容可能短暫經第三方 AI 處理。</p>
+
+  <h2>聯絡方式</h2>
+  <p>Email：support@snapstudy.app</p>
+</div>
+
+<!-- 簡體 -->
+<div class="lang" data-lang="zh-Hans">
+  <h1>隐私政策</h1>
+  <p>最后更新日期：2026-01-09</p>
+
+  <p>本政策说明 SnapStudy 如何收集、使用及保护您的信息。</p>
+
+  <h2>收集的信息</h2>
+  <ul>
+    <li>您提交的照片与图像</li>
+    <li>音频录音</li>
+    <li>文本输入与文件标题</li>
+    <li>基本技术与错误诊断数据</li>
+  </ul>
+
+  <h2>数据使用方式</h2>
+  <p>所有数据仅用于摘要、学习内容与练习考题生成。</p>
+
+  <h2>第三方 AI 服务</h2>
+  <p>为提供 OCR、语音转文字与摘要功能，内容可能短暂经第三方 AI 处理。</p>
+
+  <h2>联系方式</h2>
+  <p>Email：support@snapstudy.app</p>
+</div>
+
+</main>
+
+<footer>© 2026 SnapStudy</footer>
+
+<script>
+  const normalize = l =>
+    l.startsWith("zh") ? (l.includes("Hant")||l.includes("TW")?"zh-Hant":"zh-Hans") : "en";
+
+  const lang = localStorage.getItem("snapstudy_lang") || normalize(navigator.language);
+  const select = document.getElementById("langSelect");
+
+  function apply(l){
+    document.querySelectorAll(".lang").forEach(d=>{
+      d.classList.toggle("active", d.dataset.lang===l);
+    });
+    select.value=l;
+    localStorage.setItem("snapstudy_lang",l);
+  }
+
+  select.onchange=e=>apply(e.target.value);
+  apply(lang);
+</script>
+
+</body>
+</html>
