@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SnapStudy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SnapStudy turns textbook photos and lecture audio into clear notes and practice exams." />
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,0.06);
+      --card2: rgba(255,255,255,0.08);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --line: rgba(255,255,255,0.12);
+      --brand: #5aa9ff;
+      --brand2:#7c5cff;
+      --ok:#35d07f;
+      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+      --radius: 18px;
+      --max: 1040px;
+    }
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Noto Sans", "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(90,169,255,0.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(124,92,255,0.16), transparent 60%),
+        radial-gradient(900px 600px at 50% 90%, rgba(53,208,127,0.10), transparent 60%),
+        var(--bg);
+      overflow-x:hidden;
+    }
+    a{ color: inherit; text-decoration: none; }
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 26px 20px 60px; }
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,0.65);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav{
+      max-width: var(--max);
+      margin:0 auto;
+      padding: 14px 20px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .logo{
+      width: 36px; height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(90,169,255,0.9), rgba(124,92,255,0.9));
+      box-shadow: 0 12px 30px rgba(90,169,255,0.12);
+      display:flex; align-items:center; justify-content:center;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .logo span{ font-weight: 900; font-size: 16px; }
+    .navlinks{ display:flex; align-items:center; gap: 14px; flex-wrap: wrap; justify-content:flex-end; }
+    .navlinks a{
+      color: var(--muted);
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+    .navlinks a:hover{ color: var(--text); border-color: var(--line); background: rgba(255,255,255,0.04); }
+    .select{
+      display:flex; align-items:center; gap: 8px;
+      padding: 7px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 14px;
+    }
+    select{
+      background: transparent;
+      color: var(--text);
+      border: none;
+      outline:none;
+      font-size: 14px;
+      cursor:pointer;
+    }
+    option{ color: #111; } /* browser requirement */
+
+    .hero{
+      padding: 54px 0 24px;
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 26px;
+      align-items: center;
+    }
+    @media (max-width: 860px){
+      .hero{ grid-template-columns: 1fr; padding-top: 34px; }
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      width: fit-content;
+    }
+    .dot{
+      width: 8px; height: 8px; border-radius: 99px;
+      background: var(--ok);
+      box-shadow: 0 0 0 6px rgba(53,208,127,0.12);
+    }
+    h1{
+      margin: 14px 0 10px;
+      font-size: 48px;
+      line-height: 1.08;
+      letter-spacing: -0.6px;
+    }
+    @media (max-width: 520px){ h1{ font-size: 38px; } }
+    .sub{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+      max-width: 60ch;
+    }
+    .cta{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .btn.primary{
+      border-color: rgba(90,169,255,0.35);
+      background: linear-gradient(135deg, rgba(90,169,255,0.35), rgba(124,92,255,0.25));
+      box-shadow: 0 20px 60px rgba(90,169,255,0.14);
+    }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn small{ color: var(--muted); font-weight: 500; }
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .mock{
+      display:grid;
+      gap: 10px;
+    }
+    .mock .row{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .mock .row b{ display:block; font-size: 13px; margin-bottom: 6px; }
+    .mock .row span{ color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+    @media (max-width: 900px){ .grid3{ grid-template-columns: 1fr; } }
+    .feature{
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+    .feature h3{ margin: 10px 0 6px; font-size: 16px; }
+    .feature p{ margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .icon{
+      width: 38px; height: 38px; border-radius: 14px;
+      border: 1px solid var(--line);
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,0.04);
+      font-size: 18px;
+    }
+    section{ padding-top: 26px; }
+    .sectionTitle{
+      margin: 28px 0 10px;
+      font-size: 20px;
+      letter-spacing: -0.2px;
+    }
+    .muted{ color: var(--muted); }
+
+    .faq{
+      display:grid;
+      gap: 10px;
+    }
+    details{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    summary{ cursor:pointer; font-weight: 600; }
+    details p{ margin: 10px 0 0; color: var(--muted); line-height: 1.6; font-size: 14px; }
+
+    footer{
+      margin-top: 60px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      display:flex;
+      gap: 10px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .links{ display:flex; gap: 10px; flex-wrap: wrap; }
+    .links a{ color: var(--muted); }
+    .links a:hover{ color: var(--text); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand" aria-label="SnapStudy">
+      <div class="logo" aria-hidden="true"><span>S</span></div>
+      <div>SnapStudy</div>
+    </div>
+
+    <div class="navlinks">
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      <a href="./privacy.html" data-i18n="nav.privacy">Privacy</a>
+      <a href="./terms.html" data-i18n="nav.terms">Terms</a>
+
+      <div class="select" title="Language">
+        <span>🌐</span>
+        <select id="langSelect" aria-label="Language">
+          <option value="en">English</option>
+          <option value="zh-Hant">繁體中文</option>
+          <option value="zh-Hans">简体中文</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="pill">
+        <span class="dot" aria-hidden="true"></span>
+        <span data-i18n="hero.pill">AI-powered study summaries and practice exams</span>
+      </div>
+
+      <h1 data-i18n="hero.title">Turn photos & audio into study-ready notes.</h1>
+      <p class="sub" data-i18n="hero.subtitle">
+        SnapStudy helps students extract key vocabulary, grammar, and questions from textbook photos and lecture recordings, then generates practice exams with explanations.
+      </p>
+
+      <div class="cta">
+        <a class="btn primary" href="mailto:harperchang2025@gmail.com">
+          ✉️ <span data-i18n="cta.support">Contact Support</span>
+          <small>harperchang2025@gmail.com</small>
+        </a>
+        <a class="btn" href="#features">✨ <span data-i18n="cta.features">See features</span></a>
+      </div>
+
+      <div class="grid3" id="features">
+        <div class="feature">
+          <div class="icon">📷</div>
+          <h3 data-i18n="f1.title">Textbook Photo Summary</h3>
+          <p data-i18n="f1.desc">Scan pages, extract text, and get structured notes: vocabulary, grammar, key points, and questions.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🎙️</div>
+          <h3 data-i18n="f2.title">Lecture Audio Summary</h3>
+          <p data-i18n="f2.desc">Record lectures, transcribe speech-to-text, and generate clear lecture notes automatically.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">📝</div>
+          <h3 data-i18n="f3.title">Practice Exam Generator</h3>
+          <p data-i18n="f3.desc">Create exam-style questions based on your study content, with answers and explanations.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="how">
+      <div class="mock">
+        <div class="row">
+          <b data-i18n="how.step1">1) Capture</b>
+          <span data-i18n="how.step1d">Take a photo of a textbook page or record a lecture.</span>
+        </div>
+        <div class="row">
+          <b data-i18n="how.step2">2) Process</b>
+          <span data-i18n="how.step2d">OCR / speech-to-text extracts the content for analysis.</span>
+        </div>
+        <div class="row">
+          <b data-i18n="how.step3">3) Learn</b>
+          <span data-i18n="how.step3d">Get summaries and generate practice exams in seconds.</span>
+        </div>
+      </div>
+
+      <p class="muted" style="margin:14px 0 0;" data-i18n="how.note">
+        Designed for junior high students. Built for fast, simple study workflows.
+      </p>
+    </div>
+  </div>
+
+  <section id="faq">
+    <div class="sectionTitle" data-i18n="faq.title">FAQ</div>
+    <div class="faq">
+      <details>
+        <summary data-i18n="faq.q1">Do you sell my data?</summary>
+        <p data-i18n="faq.a1">No. We do not sell user content. Content is used only to provide the requested features.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq.q2">What does the app store on my device?</summary>
+        <p data-i18n="faq.a2">Your saved recordings and generated results may be stored locally so you can access history.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq.q3">Where can I read Privacy Policy and Terms?</summary>
+        <p>
+          <a href="./privacy.html" data-i18n="faq.a3p">Privacy Policy</a>
+          <span class="muted"> / </span>
+          <a href="./terms.html" data-i18n="faq.a3t">Terms of Service</a>
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <div>© <span id="year"></span> SnapStudy</div>
+    <div class="links">
+      <a href="./privacy.html" data-i18n="footer.privacy">Privacy</a>
+      <a href="./terms.html" data-i18n="footer.terms">Terms</a>
+      <a href="mailto:harperchang2025@gmail.com" data-i18n="footer.support">Support</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ---- i18n dictionary (EN / zh-Hant / zh-Hans) ----
+  const I18N = {
+    en: {
+      "nav.features": "Features",
+      "nav.how": "How it works",
+      "nav.faq": "FAQ",
+      "nav.privacy": "Privacy",
+      "nav.terms": "Terms",
+
+      "hero.pill": "AI-powered study summaries and practice exams",
+      "hero.title": "Turn photos & audio into study-ready notes.",
+      "hero.subtitle": "SnapStudy helps students extract key vocabulary, grammar, and questions from textbook photos and lecture recordings, then generates practice exams with explanations.",
+
+      "cta.support": "Contact Support",
+      "cta.features": "See features",
+
+      "f1.title": "Textbook Photo Summary",
+      "f1.desc": "Scan pages, extract text, and get structured notes: vocabulary, grammar, key points, and questions.",
+      "f2.title": "Lecture Audio Summary",
+      "f2.desc": "Record lectures, transcribe speech-to-text, and generate clear lecture notes automatically.",
+      "f3.title": "Practice Exam Generator",
+      "f3.desc": "Create exam-style questions based on your study content, with answers and explanations.",
+
+      "how.step1": "1) Capture",
+      "how.step1d": "Take a photo of a textbook page or record a lecture.",
+      "how.step2": "2) Process",
+      "how.step2d": "OCR / speech-to-text extracts the content for analysis.",
+      "how.step3": "3) Learn",
+      "how.step3d": "Get summaries and generate practice exams in seconds.",
+      "how.note": "Designed for junior high students. Built for fast, simple study workflows.",
+
+      "faq.title": "FAQ",
+      "faq.q1": "Do you sell my data?",
+      "faq.a1": "No. We do not sell user content. Content is used only to provide the requested features.",
+      "faq.q2": "What does the app store on my device?",
+      "faq.a2": "Your saved recordings and generated results may be stored locally so you can access history.",
+      "faq.q3": "Where can I read Privacy Policy and Terms?",
+      "faq.a3p": "Privacy Policy",
+      "faq.a3t": "Terms of Service",
+
+      "footer.privacy": "Privacy",
+      "footer.terms": "Terms",
+      "footer.support": "Support"
+    },
+
+    "zh-Hant": {
+      "nav.features": "功能特色",
+      "nav.how": "使用方式",
+      "nav.faq": "常見問題",
+      "nav.privacy": "隱私權政策",
+      "nav.terms": "服務條款",
+
+      "hero.pill": "AI 學習摘要與練習考題生成",
+      "hero.title": "把照片與錄音變成可讀的重點筆記。",
+      "hero.subtitle": "SnapStudy 透過教科書拍照與課堂錄音，整理出單字、文法、重點與題目，並可生成含解釋的練習考題。",
+
+      "cta.support": "聯絡客服",
+      "cta.features": "查看功能",
+
+      "f1.title": "教科書照片摘要",
+      "f1.desc": "掃描頁面、辨識文字，輸出結構化筆記：單字、文法、重點與題目。",
+      "f2.title": "課堂錄音摘要",
+      "f2.desc": "錄音後自動轉文字並整理重點，生成清楚的講義筆記。",
+      "f3.title": "練習考題產生器",
+      "f3.desc": "根據你的學習內容生成考試風格題目，含答案與中文解釋。",
+
+      "how.step1": "1）取得素材",
+      "how.step1d": "拍下教科書頁面或錄製課堂內容。",
+      "how.step2": "2）自動處理",
+      "how.step2d": "OCR／語音轉文字擷取內容，供後續分析。",
+      "how.step3": "3）開始學習",
+      "how.step3d": "快速獲得摘要，並生成練習考題。",
+
+      "how.note": "以國中學生為主的設計，流程快速、操作簡單。",
+
+      "faq.title": "常見問題",
+      "faq.q1": "你們會販售我的資料嗎？",
+      "faq.a1": "不會。我們不販售使用者內容；內容僅用於完成你要求的功能。",
+      "faq.q2": "App 會在裝置上保存什麼？",
+      "faq.a2": "已保存的錄音與生成結果可能會儲存在裝置上，方便你在歷史紀錄中查看。",
+      "faq.q3": "哪裡可以查看隱私權政策與服務條款？",
+      "faq.a3p": "隱私權政策",
+      "faq.a3t": "服務條款",
+
+      "footer.privacy": "隱私權政策",
+      "footer.terms": "服務條款",
+      "footer.support": "客服支援"
+    },
+
+    "zh-Hans": {
+      "nav.features": "功能特色",
+      "nav.how": "使用方式",
+      "nav.faq": "常见问题",
+      "nav.privacy": "隐私政策",
+      "nav.terms": "服务条款",
+
+      "hero.pill": "AI 学习摘要与练习考题生成",
+      "hero.title": "把照片与录音变成可读的重点笔记。",
+      "hero.subtitle": "SnapStudy 通过教科书拍照与课堂录音，整理出单词、语法、重点与题目，并可生成含解释的练习考题。",
+
+      "cta.support": "联系客服",
+      "cta.features": "查看功能",
+
+      "f1.title": "教科书照片摘要",
+      "f1.desc": "扫描页面、识别文字，输出结构化笔记：单词、语法、重点与题目。",
+      "f2.title": "课堂录音摘要",
+      "f2.desc": "录音后自动转文字并整理重点，生成清晰的讲义笔记。",
+      "f3.title": "练习考题生成器",
+      "f3.desc": "根据你的学习内容生成考试风格题目，含答案与中文解释。",
+
+      "how.step1": "1）获取素材",
+      "how.step1d": "拍下教科书页面或录制课堂内容。",
+      "how.step2": "2）自动处理",
+      "how.step2d": "OCR／语音转文字提取内容，用于后续分析。",
+      "how.step3": "3）开始学习",
+      "how.step3d": "快速获得摘要，并生成练习考题。",
+
+      "how.note": "以初中学生为主的设计，流程快速、操作简单。",
+
+      "faq.title": "常见问题",
+      "faq.q1": "你们会出售我的数据吗？",
+      "faq.a1": "不会。我们不出售用户内容；内容仅用于完成你请求的功能。",
+      "faq.q2": "App 会在设备上保存什么？",
+      "faq.a2": "已保存的录音与生成结果可能会存储在设备上，便于你在历史记录中查看。",
+      "faq.q3": "在哪里可以查看隐私政策与服务条款？",
+      "faq.a3p": "隐私政策",
+      "faq.a3t": "服务条款",
+
+      "footer.privacy": "隐私政策",
+      "footer.terms": "服务条款",
+      "footer.support": "客服支持"
+    }
+  };
+
+  function normalizeLang(lang){
+    if(!lang) return "en";
+    const l = lang.toLowerCase();
+    if (l.startsWith("zh")) {
+      // Rough mapping: zh-Hant for TW/HK/MO, else zh-Hans
+      if (l.includes("tw") || l.includes("hk") || l.includes("mo") || l.includes("hant")) return "zh-Hant";
+      return "zh-Hans";
+    }
+    return "en";
+  }
+
+  function applyLang(lang){
+    const dict = I18N[lang] || I18N.en;
+    document.documentElement.lang = (lang === "zh-Hant" ? "zh-Hant" : (lang === "zh-Hans" ? "zh-Hans" : "en"));
+
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    const sel = document.getElementById("langSelect");
+    if (sel) sel.value = lang;
+    localStorage.setItem("snapstudy_lang", lang);
+  }
+
+  // init
+  document.getElementById("year").textContent = new Date().getFullYear();
+  const saved = localStorage.getItem("snapstudy_lang");
+  const auto = normalizeLang(navigator.language || navigator.userLanguage);
+  applyLang(saved || auto);
+
+  document.getElementById("langSelect").addEventListener("change", (e) => {
+    applyLang(e.target.value);
+  });
+</script>
+
+</body>
+</html>
